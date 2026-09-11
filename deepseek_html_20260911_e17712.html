@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apple Watch Studio</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+body{background:#f5f5f7;display:flex;justify-content:center;min-height:100vh;padding:20px}
+
+.corner-logo{
+  position:fixed;top:24px;right:28px;z-index:1000;
+  display:flex;align-items:center;gap:8px;
+  padding:8px 14px;background:rgba(255,255,255,.85);
+  backdrop-filter:blur(10px);border-radius:40px;
+  box-shadow:0 4px 20px rgba(0,0,0,.08);transition:transform .2s;
+}
+.corner-logo:hover{transform:scale(1.05)}
+.corner-logo svg{width:22px;height:22px;fill:#1d1d1f}
+.corner-logo span{font-size:13px;font-weight:500;color:#1d1d1f}
+
+.box{max-width:1150px;width:100%;background:#fff;border-radius:32px;padding:32px 40px;box-shadow:0 20px 40px rgba(0,0,0,.06)}
+.nav{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid #e8e8ed;margin-bottom:24px;font-size:14px}
+.steps{display:flex;gap:18px;color:#86868b}
+.steps .on{color:#0071e3;font-weight:600}
+h1{font-size:30px;font-weight:600;color:#1d1d1f;margin-bottom:6px}
+.sub{color:#6e6e73;margin-bottom:24px}
+.grid{display:grid;grid-template-columns:1fr 1.1fr;gap:36px}
+.panel{background:#f5f5f7;border-radius:28px;padding:30px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:540px}
+.bp{display:flex;flex-direction:column;align-items:center}
+.wd{position:relative;width:150px;height:180px;background:#1d1d1f;border-radius:42px;box-shadow:0 20px 30px -8px rgba(0,0,0,.35),0 0 0 3px #3a3a3c inset,0 0 0 6px #2a2a2c inset;display:flex;align-items:center;justify-content:center;z-index:2}
+.ws{width:118px;height:146px;background:#0a0a0a;border-radius:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;text-align:center;opacity:.85;font-weight:300}
+.cr{position:absolute;right:-7px;top:60px;width:7px;height:26px;background:#3a3a3c;border-radius:3px}
+.bt{width:130px;height:70px;margin-bottom:-16px;border-radius:12px 12px 0 0;box-shadow:inset 0 -6px 10px rgba(0,0,0,.15);background:#1d1d1f;transition:background .3s,background-image .3s}
+.bb{width:130px;height:70px;margin-top:-16px;border-radius:0 0 12px 12px;box-shadow:inset 0 6px 10px rgba(0,0,0,.15);background:#1d1d1f;transition:background .3s,background-image .3s}
+.wn{font-size:14px;font-weight:600;color:#1d1d1f;margin-top:22px}
+.bl{font-size:12px;color:#6e6e73;margin-top:4px}
+.ctrl{display:flex;flex-direction:column;gap:18px}
+.grp{display:flex;flex-direction:column;gap:8px}
+.grp label{font-size:12px;font-weight:600;color:#1d1d1f;letter-spacing:.03em;text-transform:uppercase}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.mbtn{background:#f5f5f7;border:1.5px solid transparent;padding:9px 14px;border-radius:12px;font-size:12px;font-weight:500;cursor:pointer;flex:1 0 auto;text-align:center;color:#1d1d1f}
+.mbtn:hover{background:#e8e8ed}
+.mbtn.on{background:#1d1d1f;color:#fff}
+.btypes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.btype{background:#f5f5f7;border:2px solid transparent;border-radius:14px;padding:10px 6px;cursor:pointer;text-align:center;font-size:11px;font-weight:500;color:#1d1d1f}
+.btype:hover{background:#e8e8ed}
+.btype.on{border-color:#0071e3;background:#eaf3ff}
+.btype .ic{height:32px;display:flex;align-items:center;justify-content:center;margin-bottom:4px}
+.btype svg{width:50px;height:26px}
+.colors{display:flex;flex-wrap:wrap;gap:8px}
+.csw{width:36px;height:36px;border-radius:50%;cursor:pointer;border:3px solid transparent;box-shadow:0 2px 6px rgba(0,0,0,.1);transition:transform .2s}
+.csw:hover{transform:scale(1.1)}
+.csw.on{border-color:#0071e3;box-shadow:0 0 0 3px rgba(0,113,227,.3)}
+.sizes{display:flex;gap:8px}
+.sbtn{flex:1;background:#f5f5f7;border:2px solid transparent;padding:10px;border-radius:12px;font-size:12px;font-weight:500;cursor:pointer;color:#1d1d1f}
+.sbtn.on{border-color:#0071e3;background:#eaf3ff;color:#0071e3}
+.price{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;background:#f5f5f7;border-radius:20px;transition:background .3s}
+.price .lbl{font-size:12px;color:#6e6e73}
+.price .val{font-size:22px;font-weight:600;color:#1d1d1f;letter-spacing:-.02em}
+.price .val small{font-size:12px;font-weight:400;color:#6e6e73;margin-left:3px}
+.price .subprice{font-size:10px;color:#86868b;display:block;margin-top:2px}
+.next{background:#0071e3;color:#fff;border:none;padding:15px;border-radius:14px;font-size:15px;font-weight:500;cursor:pointer;width:100%}
+.next:hover{background:#0077ed}
+.step2{display:none}
+.step2.on{display:block}
+.step1.off{display:none}
+
+.wrist{background:linear-gradient(180deg,#fafafa,#eef0f3);border-radius:32px;padding:30px 20px;min-height:660px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.scene{position:relative;width:340px;height:560px}
+.arm{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:180px;height:520px;background:linear-gradient(90deg,#b97d52 0%,#e8b48c 25%,#f2c9a3 45%,#e8b48c 65%,#c98e60 100%);border-radius:90px 90px 70px 70px;box-shadow:inset -25px 0 40px rgba(120,70,30,.35),inset 20px 0 30px rgba(255,220,190,.35),0 30px 60px rgba(0,0,0,.18)}
+.arm::before{content:"";position:absolute;left:20%;top:8%;width:30px;height:75%;background:linear-gradient(180deg,rgba(255,240,220,.5),rgba(255,240,220,0));border-radius:50%;filter:blur(8px)}
+.zone{position:absolute;top:170px;left:50%;transform:translateX(-50%);width:190px;height:130px;background:radial-gradient(ellipse,rgba(120,70,30,.18),transparent 70%);border-radius:50%;z-index:2}
+.wbt{position:absolute;top:60px;left:50%;transform:translateX(-50%);width:130px;height:150px;border-radius:65px 65px 20px 20px;z-index:1;background:#1d1d1f;box-shadow:inset -12px 0 20px rgba(0,0,0,.25),inset 8px 0 15px rgba(255,255,255,.15),0 6px 12px rgba(0,0,0,.2);transition:background .3s,background-image .3s}
+.wbb{position:absolute;top:340px;left:50%;transform:translateX(-50%);width:130px;height:180px;border-radius:20px 20px 65px 65px;z-index:1;background:#1d1d1f;box-shadow:inset -12px 0 20px rgba(0,0,0,.25),inset 8px 0 15px rgba(255,255,255,.15),0 6px 12px rgba(0,0,0,.2);transition:background .3s,background-image .3s}
+.hole{position:absolute;left:50%;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:rgba(0,0,0,.4);box-shadow:inset 0 2px 3px rgba(0,0,0,.6);z-index:3}
+.ww{position:absolute;top:190px;left:50%;transform:translateX(-50%);z-index:5;filter:drop-shadow(0 20px 25px rgba(0,0,0,.35))}
+.wcr{position:absolute;right:-8px;top:55px;width:8px;height:30px;background:linear-gradient(90deg,#4a4a4c,#2c2c2e);border-radius:3px}
+.wbt2{position:absolute;right:-7px;top:100px;width:6px;height:26px;background:linear-gradient(90deg,#4a4a4c,#2c2c2e);border-radius:3px}
+.winfo{margin-top:26px;text-align:center;background:#fff;padding:14px 28px;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+.winfo h3{font-size:14px;font-weight:600;color:#1d1d1f;margin-bottom:3px}
+.winfo p{font-size:12px;color:#6e6e73}
+.winfo .wprice{font-size:16px;font-weight:600;color:#0071e3;margin-top:6px}
+.actions{display:flex;justify-content:center;gap:10px;margin-top:22px}
+.back{background:#f5f5f7;color:#0071e3;border:none;padding:13px 24px;border-radius:13px;font-size:14px;font-weight:500;cursor:pointer}
+.back:hover{background:#e8e8ed}
+.conf{background:#0071e3;color:#fff;border:none;padding:13px 28px;border-radius:13px;font-size:14px;font-weight:500;cursor:pointer}
+.conf:hover{background:#0077ed}
+
+@media(max-width:850px){
+  .grid{grid-template-columns:1fr}
+  .scene{width:280px;height:480px}
+  .arm{width:150px;height:440px}
+  .wbt{width:110px;height:130px}
+  .wbb{width:110px;height:150px;top:300px}
+  .ww{top:165px}
+  .corner-logo{top:14px;right:14px;padding:6px 10px}
+  .corner-logo span{font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<div class="corner-logo">
+  <svg viewBox="0 0 842 1000" xmlns="http://www.w3.org/2000/svg">
+    <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57-155.5-127C46.7 790.7 0 663 0 541.8c0-194.4 126.4-297.5 250.8-297.5 66.1 0 121.2 43.4 162.7 43.4 39.5 0 101.1-46 176.3-46 28.5 0 130.9 2.6 198.3 99.2zm-234-181.5c31.1-36.9 53.1-88.1 53.1-139.3 0-7.1-.6-14.3-1.9-20.1-50.6 1.9-110.8 33.7-147.1 75.8-28.5 32.4-55.1 83.6-55.1 135.5 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 45.4 0 102.5-30.4 135.5-71.3z"/>
+  </svg>
+  <span>Apple Watch</span>
+</div>
+
+<div class="box">
+  <div class="nav">
+    <div style="font-weight:600">Studio</div>
+    <div class="steps">
+      <span class="on" id="ind1">① Personalizar</span>
+      <span id="ind2">② Pruébate</span>
+    </div>
+  </div>
+
+  <!-- PASO 1 -->
+  <div class="step1" id="step1">
+    <h1>Crea tu correa perfecta</h1>
+    <p class="sub">Combina modelo, tipo, color y talla. El precio se actualiza al instante.</p>
+    <div class="grid">
+      <div class="panel">
+        <div class="bp">
+          <div class="bt" id="bt"></div>
+          <div class="wd">
+            <div class="cr"></div>
+            <div class="ws">10:09<br><br>LUN 15</div>
+          </div>
+          <div class="bb" id="bb"></div>
+        </div>
+        <div class="wn" id="wn">Apple Watch Series 9</div>
+        <div class="bl" id="bl">Sport Band · Negro</div>
+      </div>
+
+      <div class="ctrl">
+        <div class="grp">
+          <label>1. Modelo</label>
+          <div class="row" id="models">
+            <button class="mbtn on" data-m="Apple Watch Series 9" data-s="41mm o 45mm" data-base="399">Series 9</button>
+            <button class="mbtn" data-m="Apple Watch Ultra 2" data-s="49mm" data-base="799">Ultra 2</button>
+            <button class="mbtn" data-m="Apple Watch SE" data-s="40mm o 44mm" data-base="249">SE</button>
+            <button class="mbtn" data-m="Apple Watch Series 8" data-s="41mm o 45mm" data-base="329">Series 8</button>
+          </div>
+        </div>
+
+        <div class="grp">
+          <label>2. Tipo de correa</label>
+          <div class="btypes" id="btypes">
+            <div class="btype on" data-b="sport" data-bn="Sport Band" data-price="49"><div class="ic"><svg viewBox="0 0 60 30"><rect x="15" y="2" width="30" height="26" rx="4" fill="#1d1d1f"/></svg></div>Sport Band</div>
+            <div class="btype" data-b="loop" data-bn="Sport Loop" data-price="49"><div class="ic"><svg viewBox="0 0 60 30"><rect x="12" y="2" width="36" height="26" rx="13" fill="#1d1d1f"/></svg></div>Sport Loop</div>
+            <div class="btype" data-b="milanese" data-bn="Milanese Loop" data-price="99"><div class="ic"><svg viewBox="0 0 60 30"><rect x="12" y="4" width="36" height="22" rx="11" fill="none" stroke="#1d1d1f" stroke-width="1.5" stroke-dasharray="2,2"/></svg></div>Milanese</div>
+            <div class="btype" data-b="leather" data-bn="Cuero" data-price="129"><div class="ic"><svg viewBox="0 0 60 30"><rect x="15" y="2" width="30" height="26" rx="2" fill="#8b5a2b"/></svg></div>Cuero</div>
+            <div class="btype" data-b="nike" data-bn="Nike Sport" data-price="59"><div class="ic"><svg viewBox="0 0 60 30"><rect x="15" y="2" width="30" height="26" rx="4" fill="#1d1d1f"/><circle cx="30" cy="15" r="4" fill="#fff"/></svg></div>Nike</div>
+            <div class="btype" data-b="hermes" data-bn="Hermès" data-price="349"><div class="ic"><svg viewBox="0 0 60 30"><rect x="15" y="2" width="30" height="26" rx="2" fill="#c1440e"/></svg></div>Hermès</div>
+          </div>
+        </div>
+
+        <div class="grp">
+          <label>3. Color</label>
+          <div class="colors" id="colors"></div>
+        </div>
+
+        <div class="grp">
+          <label>4. Talla</label>
+          <div class="sizes" id="sizes">
+            <button class="sbtn on" data-z="S/M" data-extra="0">S/M</button>
+            <button class="sbtn" data-z="M/L" data-extra="10">M/L</button>
+          </div>
+        </div>
+
+        <div class="price">
+          <div>
+            <div class="lbl">Total</div>
+            <div class="subprice" id="subprice">Serie 9 + Sport Band</div>
+          </div>
+          <div class="val" id="price">$448.00 <small>USD</small></div>
+        </div>
+
+        <button class="next" id="next">Siguiente · Pruébate →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 2 -->
+  <div class="step2" id="step2">
+    <h1>Así se ve en tu muñeca</h1>
+    <p class="sub">Vista realista de tu Apple Watch puesto.</p>
+    <div class="wrist">
+      <div class="scene">
+        <div class="arm"></div>
+        <div class="zone"></div>
+        <div class="wbt" id="wbt"></div>
+        <div class="wbb" id="wbb">
+          <div class="hole" style="top:20px"></div>
+          <div class="hole" style="top:45px"></div>
+          <div class="hole" style="top:70px"></div>
+          <div class="hole" style="top:95px"></div>
+        </div>
+        <div class="ww">
+          <div style="position:relative;width:150px;height:180px;background:#1d1d1f;border-radius:42px;box-shadow:0 15px 30px rgba(0,0,0,.4),0 0 0 3px #3a3a3c inset,0 0 0 6px #2a2a2c inset;display:flex;align-items:center;justify-content:center">
+            <div class="wcr"></div><div class="wbt2"></div>
+            <div style="width:118px;height:146px;background:#0a0a0a;border-radius:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;opacity:.9;font-weight:300">10:09<br><br>LUN 15</div>
+          </div>
+        </div>
+      </div>
+      <div class="winfo">
+        <h3 id="fn">Apple Watch Series 9 · 41mm</h3>
+        <p id="fd">Sport Band · Negro · S/M</p>
+        <div class="wprice" id="wprice">$448.00 USD</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="back" id="back">← Volver a editar</button>
+      <button class="conf" id="conf">Añadir a la bolsa</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var data = {
+    sport:{n:'Sport Band',c:[['Negro','#1d1d1f'],['Blanco','#f5f5f7'],['Azul','#4a6fa5'],['Verde','#3a5a40'],['Rosa','#e8a5b8'],['Amarillo','#f4d35e'],['Rojo','#c1272d'],['Naranja','#ff9f0a']]},
+    loop:{n:'Sport Loop',c:[['Medianoche','#1a1a2e'],['Blanco','#f0f0f0'],['Azul océano','#2563a0'],['Verde oliva','#5a6b3a'],['Coral','#ff6b5b'],['Rosa palo','#e5b8b0'],['Morado','#7d5ba6']]},
+    milanese:{n:'Milanese Loop',c:[['Plata','#d1d1d6'],['Oro','#d4af37'],['Grafito','#3a3a3c'],['Oro rosa','#e0b0a0']]},
+    leather:{n:'Cuero',c:[['Marrón','#8b5a2b'],['Negro','#1d1d1f'],['Rojo','#8b1a1a'],['Azul marino','#1e3a5f'],['Beige','#d4b896']]},
+    nike:{n:'Nike Sport',c:[['Negro/Volt','#1d1d1f'],['Azul/Gris','#3a5a8a'],['Rosa/Blanco','#e8a5b8'],['Verde/Blanco','#5a8a3a']]},
+    hermes:{n:'Hermès',c:[['Naranja','#c1440e'],['Marrón coñac','#a0522d'],['Negro','#1d1d1f'],['Rojo rubí','#9b111e']]}
+  };
+
+  var st = {
+    m:'Apple Watch Series 9',s:'41mm o 45mm',base:399,
+    b:'sport',bn:'Sport Band',bprice:49,
+    cn:'Negro',ch:'#1d1d1f',
+    z:'S/M',zextra:0
+  };
+
+  var bt=document.getElementById('bt'),bb=document.getElementById('bb'),
+      wn=document.getElementById('wn'),bl=document.getElementById('bl'),
+      colors=document.getElementById('colors'),price=document.getElementById('price'),
+      subprice=document.getElementById('subprice'),
+      wbt=document.getElementById('wbt'),wbb=document.getElementById('wbb'),
+      fn=document.getElementById('fn'),fd=document.getElementById('fd'),
+      wprice=document.getElementById('wprice');
+
+  function calcTotal(){
+    return st.base + st.bprice + st.zextra;
+  }
+
+  function tex(el){
+    el.style.backgroundImage='none';el.style.backgroundSize='auto';
+    if(st.b==='milanese')el.style.backgroundImage='repeating-linear-gradient(90deg,rgba(255,255,255,.18) 0 1px,transparent 1px 3px)';
+    else if(st.b==='loop')el.style.backgroundImage='repeating-linear-gradient(45deg,rgba(0,0,0,.1) 0 2px,transparent 2px 4px)';
+    else if(st.b==='nike'){el.style.backgroundImage='radial-gradient(circle,rgba(255,255,255,.28) 1.5px,transparent 1.5px)';el.style.backgroundSize='9px 9px'}
+    else if(st.b==='leather'){el.style.backgroundImage='radial-gradient(circle,rgba(0,0,0,.15) .5px,transparent 1px)';el.style.backgroundSize='4px 4px'}
+    else if(st.b==='hermes')el.style.backgroundImage='repeating-linear-gradient(0deg,rgba(255,255,255,.06) 0 1px,transparent 1px 2px)';
+  }
+
+  function draw(){
+    bt.style.background=st.ch;bb.style.background=st.ch;
+    tex(bt);tex(bb);
+    wn.textContent=st.m;
+    bl.textContent=st.bn+' · '+st.cn;
+    var total=calcTotal();
+    price.innerHTML='$'+total.toFixed(2)+' <small>USD</small>';
+    subprice.textContent=st.m.replace('Apple Watch ','')+' + '+st.bn+' + talla '+st.z;
+  }
+
+  function drawColors(){
+    colors.innerHTML='';
+    data[st.b].c.forEach(function(c){
+      var d=document.createElement('div');
+      d.className='csw'+(c[1]===st.ch?' on':'');
+      d.style.background=c[1];d.title=c[0];
+      d.onclick=function(){st.cn=c[0];st.ch=c[1];drawColors();draw()};
+      colors.appendChild(d);
+    });
+  }
+
+  document.querySelectorAll('#models .mbtn').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('#models .mbtn').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      st.m=b.dataset.m;st.s=b.dataset.s;st.base=parseInt(b.dataset.base);
+      draw();
+    };
+  });
+
+  document.querySelectorAll('#btypes .btype').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('#btypes .btype').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      st.b=b.dataset.b;st.bn=b.dataset.bn;st.bprice=parseInt(b.dataset.price);
+      st.cn=data[st.b].c[0][0];st.ch=data[st.b].c[0][1];
+      drawColors();draw();
+    };
+  });
+
+  document.querySelectorAll('#sizes .sbtn').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('#sizes .sbtn').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      st.z=b.dataset.z;st.zextra=parseInt(b.dataset.extra);
+      draw();
+    };
+  });
+
+  document.getElementById('next').onclick=function(){
+    var total=calcTotal();
+    fn.textContent=st.m+' · '+st.s;
+    fd.textContent=st.bn+' · '+st.cn+' · '+st.z;
+    wprice.textContent='$'+total.toFixed(2)+' USD';
+    wbt.style.background=st.ch;wbb.style.background=st.ch;
+    tex(wbt);tex(wbb);
+    document.getElementById('step1').classList.add('off');
+    document.getElementById('step2').classList.add('on');
+    document.getElementById('ind1').classList.remove('on');
+    document.getElementById('ind2').classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  document.getElementById('back').onclick=function(){
+    document.getElementById('step2').classList.remove('on');
+    document.getElementById('step1').classList.remove('off');
+    document.getElementById('ind2').classList.remove('on');
+    document.getElementById('ind1').classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  document.getElementById('conf').onclick=function(){
+    var total=calcTotal();
+    alert('✅ Añadido a la bolsa\n\n'+st.m+' ('+st.s+')\n'+st.bn+' · '+st.cn+' · '+st.z+'\n\nTotal: $'+total.toFixed(2)+' USD');
+  };
+
+  drawColors();draw();
+})();
+</script>
+</body>
+</html>
